@@ -3,6 +3,7 @@ import 'package:learning_application_multifeatures/utils/components/custom_appba
 import 'package:learning_application_multifeatures/utils/components/custom_button.dart';
 import 'package:learning_application_multifeatures/views/pages/form_application.dart';
 import 'package:learning_application_multifeatures/views/pages/form_complex.dart';
+import 'package:learning_application_multifeatures/views/pages/show_form_application.dart';
 
 class FormPage extends StatefulWidget {
   const FormPage({super.key});
@@ -48,6 +49,19 @@ class _FormPageState extends State<FormPage> {
                   title: 'Form Complex',
                   icon: Icons.file_copy,
                   color: Colors.green,
+                ),
+                CustomButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowFormApplication(),
+                      ),
+                    );
+                  },
+                  title: 'Show Form Application',
+                  icon: Icons.list,
+                  color: Colors.blue,
                 ),
               ],
             ),

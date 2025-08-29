@@ -36,3 +36,18 @@ Future<Map<String, dynamic>> submitFormApplication(
     return {};
   }
 }
+
+Future<Map<String, dynamic>> fetchFormApplication() async {
+  try {
+    final response = await http.get(Uri.parse(Api.getFormApplication));
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return {};
+    }
+  } catch (e) {
+    print(e);
+    return {};
+  }
+}
