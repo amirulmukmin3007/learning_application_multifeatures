@@ -19,8 +19,28 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
   bool hasTransport = true;
   TextEditingController nameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void submission() async {
+    if (!formKey.currentState!.validate() || dateController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Please fill in all the required fields.'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });
@@ -66,6 +86,7 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
         children: [
           SafeArea(
             child: Form(
+              key: formKey,
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: SingleChildScrollView(
@@ -130,7 +151,7 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                       width: 2,
                                     ), // Golden border
                                   ),
-                                  child: TextField(
+                                  child: TextFormField(
                                     controller: nameController,
                                     decoration: InputDecoration(
                                       hintText: 'Name',
@@ -144,6 +165,12 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                         vertical: 15,
                                       ),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter your name';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
 
@@ -192,6 +219,12 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                       Icons.keyboard_arrow_down,
                                       color: Color(0xFFFFD700),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select your gender';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
 
@@ -203,37 +236,19 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                     Expanded(
                                       child: Row(
                                         children: [
-                                          Container(
-                                            width: 20,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                              color: isRemoteSelected
-                                                  ? Color(0xFFFFD700)
-                                                  : Colors.transparent,
-                                              border: Border.all(
-                                                color: Color(0xFFFFD700),
-                                                width: 2,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(3),
-                                            ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  isRemoteSelected =
-                                                      !isRemoteSelected;
-                                                });
-                                              },
-                                              child: isRemoteSelected
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      size: 16,
-                                                      color: Colors.black,
-                                                    )
-                                                  : null,
+                                          Checkbox(
+                                            value: isRemoteSelected,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                isRemoteSelected = value!;
+                                              });
+                                            },
+                                            activeColor: Color(0xFFFFD700),
+                                            checkColor: Colors.black,
+                                            side: BorderSide(
+                                              color: Color(0xFFFFD700),
                                             ),
                                           ),
-                                          SizedBox(width: 10),
                                           Text(
                                             'Remote',
                                             style: TextStyle(
@@ -247,37 +262,19 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                     Expanded(
                                       child: Row(
                                         children: [
-                                          Container(
-                                            width: 20,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                              color: isOnSiteSelected
-                                                  ? Color(0xFFFFD700)
-                                                  : Colors.transparent,
-                                              border: Border.all(
-                                                color: Color(0xFFFFD700),
-                                                width: 2,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(3),
-                                            ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  isOnSiteSelected =
-                                                      !isOnSiteSelected;
-                                                });
-                                              },
-                                              child: isOnSiteSelected
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      size: 16,
-                                                      color: Colors.black,
-                                                    )
-                                                  : null,
+                                          Checkbox(
+                                            value: isOnSiteSelected,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                isOnSiteSelected = value!;
+                                              });
+                                            },
+                                            activeColor: Color(0xFFFFD700),
+                                            checkColor: Colors.black,
+                                            side: BorderSide(
+                                              color: Color(0xFFFFD700),
                                             ),
                                           ),
-                                          SizedBox(width: 10),
                                           Text(
                                             'On-Site',
                                             style: TextStyle(
@@ -299,34 +296,19 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                     Expanded(
                                       child: Row(
                                         children: [
-                                          Container(
-                                            width: 20,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.white,
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  hasTransport = true;
-                                                });
-                                              },
-                                              child: hasTransport
-                                                  ? Container(
-                                                      margin: EdgeInsets.all(3),
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.white,
-                                                      ),
-                                                    )
-                                                  : null,
+                                          Radio(
+                                            value: true,
+                                            groupValue: hasTransport,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                hasTransport = value!;
+                                              });
+                                            },
+                                            activeColor: Colors.white,
+                                            fillColor: WidgetStateProperty.all(
+                                              Colors.white,
                                             ),
                                           ),
-                                          SizedBox(width: 10),
                                           Text(
                                             'Has transport',
                                             style: TextStyle(
@@ -340,34 +322,19 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                     Expanded(
                                       child: Row(
                                         children: [
-                                          Container(
-                                            width: 20,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.white,
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  hasTransport = false;
-                                                });
-                                              },
-                                              child: !hasTransport
-                                                  ? Container(
-                                                      margin: EdgeInsets.all(3),
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.white,
-                                                      ),
-                                                    )
-                                                  : null,
+                                          Radio<bool>(
+                                            value: false,
+                                            groupValue: hasTransport,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                hasTransport = value!;
+                                              });
+                                            },
+                                            activeColor: Colors.white,
+                                            fillColor: WidgetStateProperty.all(
+                                              Colors.white,
                                             ),
                                           ),
-                                          SizedBox(width: 10),
                                           Text(
                                             'No transport',
                                             style: TextStyle(
@@ -394,59 +361,53 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                 ),
                                 SizedBox(height: 8),
 
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: Color(0xFFFFD700),
-                                      width: 2,
-                                    ), // Golden border
-                                  ),
-                                  child: InkWell(
-                                    onTap: () async {
-                                      DateTime? pickedDate =
-                                          await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2000),
-                                            lastDate: DateTime(2101),
-                                          );
+                                InkWell(
+                                  onTap: () async {
+                                    DateTime? pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime(2101),
+                                    );
 
-                                      if (pickedDate != null) {
-                                        setState(() {
-                                          dateController.text =
-                                              '${pickedDate.day}/${pickedDate.month}/${pickedDate.year}';
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 15,
+                                    if (pickedDate != null) {
+                                      setState(() {
+                                        dateController.text =
+                                            '${pickedDate.day}/${pickedDate.month}/${pickedDate.year}';
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Color(0xFFFFD700),
+                                        width: 2,
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            dateController.text.isEmpty
-                                                ? 'Select Date'
-                                                : dateController.text,
-                                            style: TextStyle(
-                                              color: dateController.text.isEmpty
-                                                  ? Colors.grey[400]
-                                                  : Colors.black,
-                                              fontSize: 16,
-                                            ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          dateController.text.isEmpty
+                                              ? 'Select Date'
+                                              : dateController.text,
+                                          style: TextStyle(
+                                            color: dateController.text.isEmpty
+                                                ? Colors.grey[400]
+                                                : Colors.black,
+                                            fontSize: 16,
                                           ),
-                                          Icon(
-                                            Icons.calendar_today,
-                                            color: Color(0xFFFFD700),
-                                            size: 20,
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        Icon(
+                                          Icons.calendar_today,
+                                          color: Color(0xFFFFD700),
+                                          size: 20,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -463,7 +424,6 @@ class _FormApplicationPageState extends State<FormApplicationPage> {
                                   ),
                                   child: InkWell(
                                     onTap: () {
-                                      // Handle submit action
                                       submission();
                                       print('Form submitted');
                                     },
