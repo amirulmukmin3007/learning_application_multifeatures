@@ -3,6 +3,7 @@ import 'package:learning_application_multifeatures/utils/components/custom_appba
 import 'package:learning_application_multifeatures/utils/components/custom_button.dart';
 import 'package:learning_application_multifeatures/views/pages/form_application.dart';
 import 'package:learning_application_multifeatures/views/pages/form_complex.dart';
+import 'package:learning_application_multifeatures/views/pages/form_create_task.dart';
 import 'package:learning_application_multifeatures/views/pages/show_form_application.dart';
 
 class FormPage extends StatefulWidget {
@@ -24,6 +25,17 @@ class _FormPageState extends State<FormPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                CustomButton(
+                  title: 'Form Create Task',
+                  icon: Icons.add,
+                  color: Colors.white,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FormCreateTask()),
+                    );
+                  },
+                ),
                 CustomButton(
                   onTap: () {
                     Navigator.push(
